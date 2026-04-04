@@ -83,7 +83,6 @@ while True:
     # Calculate PID response
     response = House.PID_iteration(thermistor_readings[-1])
     if response < 0:
-        print('Temperatuur lager dan setpoint, peltiers uitgeschakeld')
         response = 0
     elif response > 100:
         response = 100
