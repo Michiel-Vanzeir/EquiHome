@@ -34,12 +34,8 @@ class HouseControlSystem:
         t_outside = thermistor_readings[3]
 
         if t_outside >= avg_temperature:
-            if self._servos[0] == 180:
-                print('De ramen worden gesloten')
             self.set_servos(0)
         elif t_outside < self._setpoint and avg_temperature > self._setpoint:
-            if self._servos[0] == 0:
-                print('De ramen worden geopend')
             self.set_servos(180)
 
     # Sets all servo motors to a given angle
@@ -107,7 +103,6 @@ while True:
     response = House.PID_iteration(thermistor_readings[-1])
     
     if response < 0:
-        print('Temperatuur lager dan setpoint, peltiers uitgeschakeld')
         response = 0
     elif response > 100:
         response = 100
