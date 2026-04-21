@@ -25,6 +25,9 @@ class HouseControlSystem:
         self._thermistor_pins = [analogio.AnalogIn(pin) for pin in (board.GP28,board.GP27,board.GP26)] # [downstairs, upstairs room 1, upstairs room 2, outside]
         self._peltier_elements = [pwmio.PWMOut(pin, frequency=1000) for pin in (board.GP14, board.GP15)]
 
+        # Other setup
+        self.cycle_counter = 0
+        self.historic_thermistor_readings = []
 
     # Sets the peltier element's power at the right percentage
     def set_peltiers_power(self, percentage):
@@ -58,6 +61,9 @@ class HouseControlSystem:
         temperature_readings.append(sum(temperature_readings[:3])/ 3)
     
         return temperature_readings
+
+    def calculate_temperature_avg():
+        return sum(House.historic_thermistor_readings) / len(House.historic_thermistor_readings)   
     
     # PID loop iteration
     def PID_iteration(self, reading) -> float:
@@ -76,28 +82,28 @@ class HouseControlSystem:
 
 House = HouseControlSystem()
 
-while True:
+while True:     
     # Measure the temperatures: [downstairs, upstairs room 1, upstairs room 2, indoor average]
     thermistor_readings = House.get_temperature()
+    House.historic_thermistor_readings.append(thermistor_readings[-1])
+
+    if (House.cycle_counter % 100) == 0:
+        avg_thermistor_temperature = House.calculate_temperature_avg()
+        House.historic_thermistor_readings = []
+
+        # Calculate PID response
+        response = House.PID_iteration(avg_thermistor_temperature)
+        if response < 0:
+            response = 0
+        elif response > 100:
+            response = 100
+        # Set Peltier elements' power
+        House.set_peltiers_power(response)
+               
+        print("Temperature at pin 1:", thermistor_readings[0])
+        print("Temperature at pin 2:", thermistor_readings[1])
+        print("Temperature at pin 3:", thermistor_readings[2])
     
-    # Calculate PID response
-    response = House.PID_iteration(thermistor_readings[-1])
-    if response < 0:
-        response = 0
-    elif response > 100:
-        response = 100
-    # Set Peltier elements' power
-    House.set_peltiers_power(response)
+        House.cycle_counter += 1
     
-
-    time.sleep(0.1)
-    
-    print("Temperature at pin 1:", thermistor_readings[0])
-    time.sleep(0.1)
-    print("Temperature at pin 2:", thermistor_readings[1])
-    time.sleep(0.1)
-    print("Temperature at pin 3:", thermistor_readings[2])
-    time.sleep(1)
-
-
-
+    time.sleep(0.01)
