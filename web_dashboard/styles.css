@@ -1,0 +1,48 @@
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #f0f2f5; 
+}
+
+.card {
+    border-radius: 12px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.10)!important;
+}
+
+.card-title {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+input[type=range] {
+    height: 6px;
+    border-radius: 5px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    background: #0d6efd;
+    cursor: pointer;
+    transition: background 0.15s ease-in-out;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+    background: #0b5ed7;
+}
+
+.list-group-item {
+    background-color: transparent;
+    font-size: 0.95rem;
+    color: #495057;
+}
+
+.badge.bg-secondary {
+    font-size: 0.9rem;
+    font-weight: 500;
+    background-color: #6c757d !important;
+}

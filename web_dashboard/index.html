@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sustainable Cooling</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Your custom styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <!-- Dashboard Header -->
+        <header class="mb-5 text-center">
+            <h1 class="display-5 fw-bold text-primary mb-3">The power of sustainable cooling</h1>
+            <h1 class="">Dashboard</h1>
+        </header>
+
+        <div class="row g-4">
+            <!-- Panel 1: Window control -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-header bg-white border-0 pt-4 pb-0">
+                        <h4 class="card-title text-secondary">Windows (House 1)</h4>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded">
+                            <span class="fw-bold">Current status:</span>
+                            <span class="badge bg-success fs-6" id="window-status">Closed</span> 
+                        </div>
+                        
+                        <div class="mt-auto d-grid gap-2">
+                            <button class="btn btn-outline-primary" type="button" id="btn-open">Open windows</button>
+                            <button class="btn btn-primary" type="button" id="btn-close">Close windows</button>
+                        </div>
+                        <hr class="mt-4 mb-2">
+                        <p class="small text-muted mb-0 text-center"><em>House 2 has no controllable windows</em></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-header bg-white border-0 pt-4 pb-0">
+                        <h4 class="card-title text-secondary">Cooling Control</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">System Mode</label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="mode-toggle" id="mode-pid" checked>
+                                <label class="btn btn-outline-primary" for="mode-pid">PID Auto</label>
+                                
+                                <input type="radio" class="btn-check" name="mode-toggle" id="mode-manual">
+                                <label class="btn btn-outline-primary" for="mode-manual">Manual</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="setpoint-input" class="form-label fw-bold">Target Temp (°C)</label>
+                            <div class="input-group">
+                                <input type="number" id="setpoint-input" class="form-control" value="20.0" step="0.5">
+                                <button class="btn btn-primary" type="button" id="btn-setpoint">Set Target</button>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        <p class="text-muted small mb-3">Manual Peltier Power (Only works in Manual mode)</p>
+
+                        <div class="mb-4">
+                            <label for="peltier1" class="form-label fw-bold">House 1 Power</label>
+                            <div class="d-flex align-items-center">
+                                <input type="range" class="form-range" id="peltier1" min="0" max="100" step="1" value="50">
+                                <span class="ms-3 fw-bold text-primary" style="width: 45px;" id="peltier1-val">50%</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="peltier2" class="form-label fw-bold">House 2 Power</label>
+                            <div class="d-flex align-items-center">
+                                <input type="range" class="form-range" id="peltier2" min="0" max="100" step="1" value="75">
+                                <span class="ms-3 fw-bold text-primary" style="width: 45px;" id="peltier2-val">75%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 3: Temperature Reading -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-header bg-white border-0 pt-4 pb-0">
+                        <h4 class="card-title text-secondary">Temperatures</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- House 1 Thermistors -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold fs-6 text-primary border-bottom border-primary pb-2 mb-3">House 1</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Thermistor 1 (Downstairs) <span class="badge bg-secondary rounded-pill" id="val-h1-1">-- °C</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Thermistor 2 (Upstairs) <span class="badge bg-secondary rounded-pill" id="val-h1-2">-- °C</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 border-0">
+                                    Thermistor 3 (PCM cavity) <span class="badge bg-secondary rounded-pill" id="val-h1-3">-- °C</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- House 2 Thermistors -->
+                        <div>
+                            <h5 class="fw-bold fs-6 text-primary border-bottom border-primary pb-2 mb-3">House 2</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Thermistor 1 (Downstairs) <span class="badge bg-secondary rounded-pill" id="val-h2-1">-- °C</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Thermistor 2 (Upstairs) <span class="badge bg-secondary rounded-pill" id="val-h2-2">-- °C</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 border-0">
+                                    Thermistor 3 (Outside) <span class="badge bg-secondary rounded-pill" id="val-h2-3">-- °C</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Temperature Graphs -->
+        <div class="row g-4 mt-2">
+            <!-- Graph House 1 -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white border-0 pt-4 pb-0">
+                        <h4 class="card-title text-secondary">Live Temperature (House 1)</h4>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartHouse1" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Graph House 2 -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white border-0 pt-4 pb-0">
+                        <h4 class="card-title text-secondary">Live Temperature (House 2)</h4>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartHouse2" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom External JS -->
+    <script src="script.js"></script>
+</body>
+</html>
